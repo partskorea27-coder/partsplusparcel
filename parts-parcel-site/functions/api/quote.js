@@ -1,23 +1,42 @@
 export async function onRequestPost(context) {
   try {
-    const formData = await context.request.formData();
+    const contentType = context.request.headers.get("content-type") || "";
 
-    const firstName = formData.get("firstName") || "";
-    const lastName = formData.get("lastName") || "";
-    const company = formData.get("company") || "";
-    const phone = formData.get("phone") || "";
-    const email = formData.get("email") || "";
-    const vehicle = formData.get("vehicle") || "";
-    const parts = formData.get("parts") || "";
-    const message = formData.get("message") || "";
+    let data = {};
+
+    if (contentType.includes("application/json")) {
+      data = await context.request.json();
+    } else {
+      const formData = await context.request.formData();
+
+      data = {
+        firstName: formData.get("firstName") || "",
+        lastName: formData.get("lastName") || "",
+        company: formData.get("company") || "",
+        phone: formData.get("phone") || "",
+        email: formData.get("email") || "",
+        vehicle: formData.get("vehicle") || "",
+        parts: formData.get("parts") || "",
+        message: formData.get("message") || ""
+      };
+    }
+
+    const firstName = data.firstName || "";
+    const lastName = data.lastName || "";
+    const company = data.company || "";
+    const phone = data.phone || "";
+    const email = data.email || "";
+    const vehicle = data.vehicle || "";
+    const parts = data.parts || "";
+    const message = data.message || "";
 
     if (!firstName || !lastName || !phone || !email || !vehicle || !parts) {
-      return new Response(
-        JSON.stringify({ success: false, error: "Please fill in all required fields." }),
+      return Response.json(
         {
-          status: 400,
-          headers: { "Content-Type": "application/json" }
-        }
+          success: false,
+          error: "Please fill in all required fields."
+        },
+        { status: 400 }
       );
     }
 
@@ -43,40 +62,41 @@ export async function onRequestPost(context) {
           <p><strong>Required Part(s):</strong> ${parts}</p>
           <p><strong>Message:</strong></p>
           <p>${message || "No additional message"}</p>
+
+          <hr>
+
+          <p>This enquiry was submitted through partsplusparcel.com.</p>
         `
       })
     });
 
-    if (!response.ok) {
-      const error = await response.text();
-      console.error("Resend error:", error);
+    const result = await response.text();
 
-      return new Response(
-        JSON.stringify({ success: false, error: "Unable to send email." }),
+    if (!response.ok) {
+      console.error("Resend error:", result);
+
+      return Response.json(
         {
-          status: 500,
-          headers: { "Content-Type": "application/json" }
-        }
+          success: false,
+          error: "Unable to send email."
+        },
+        { status: 500 }
       );
     }
 
-    return new Response(
-      JSON.stringify({ success: true }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" }
-      }
-    );
+    return Response.json({
+      success: true
+    });
 
   } catch (error) {
-    console.error(error);
+    console.error("Server error:", error);
 
-    return new Response(
-      JSON.stringify({ success: false, error: "Something went wrong." }),
+    return Response.json(
       {
-        status: 500,
-        headers: { "Content-Type": "application/json" }
-      }
+        success: false,
+        error: "Something went wrong."
+      },
+      { status: 500 }
     );
   }
 }
