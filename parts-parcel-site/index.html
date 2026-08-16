@@ -302,28 +302,37 @@
         <a href="mailto:sales@partsplusparcel.com">✉ sales@partsplusparcel.com</a>
       </div>
     </div>
-    <form class="qform" onsubmit="event.preventDefault();">
+    <form class="qform" action="/api/quote" method="POST">
       <div class="row">
-        <div class="field"><label>First Name *</label><input type="text" required></div>
-        <div class="field"><label>Last Name *</label><input type="text" required></div>
+        <div class="field"><label>First Name *</label><input type="text" name="first_name" required></div>
+        <div class="field"><label>Last Name *</label><input type="text" name="last_name" required></div>
       </div>
       <div class="row">
-        <div class="field"><label>Company Name</label><input type="text"></div>
-        <div class="field"><label>Phone *</label><input type="tel" required></div>
+        <div class="field"><label>Company Name</label><input type="text" name="company_name"></div>
+        <div class="field"><label>Phone *</label><input type="tel" name="phone" required></div>
       </div>
-      <div class="field"><label>Email *</label><input type="email" required></div>
+      <div class="field"><label>Email *</label><input type="email" name="email" required></div>
       <div class="row">
         <div class="field"><label>Vehicle Brand *</label>
-          <select required>
+          <select name="vehicle_brand" required>
             <option value="">Select brand</option>
             <option>Toyota</option><option>Honda</option><option>Nissan</option><option>Mazda</option>
             <option>Hyundai</option><option>Kia</option><option>Mitsubishi</option><option>BYD</option>
             <option>Other</option>
           </select>
         </div>
-        <div class="field"><label>Required Part(s) *</label><input type="text" placeholder="e.g. Front brake pads" required></div>
+        <div class="field"><label>Required Part(s) *</label><input
+  type="text"
+  name="required_parts"
+  placeholder="e.g. Front brake pads"
+  required
+></div>
       </div>
-      <div class="field"><label>Message</label><textarea rows="3" placeholder="Part Number and any other details that help us quote accurately"></textarea></div>
+      <div class="field"><label>Message</label><textarea rows="3" placeholder="Part Number and any other details that help us quote accurately"><textarea
+  name="message"
+  rows="3"
+  placeholder="Part Number and any other details that help us quote accurately"
+></textarea></div>
       <button class="btn btn-solid" type="submit" style="margin-top:8px;">Submit</button>
     </form>
   </div>
