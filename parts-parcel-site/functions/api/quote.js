@@ -1,36 +1,82 @@
 export async function onRequestPost(context) {
-  const formData = await context.request.formData();
+  try {
+    const formData = await context.request.formData();
 
-  const firstName = formData.get("first_name") || "";
-  const lastName = formData.get("last_name") || "";
-  const company = formData.get("company_name") || "";
-  const phone = formData.get("phone") || "";
-  const email = formData.get("email") || "";
-  const vehicle = formData.get("vehicle_brand") || "";
-  const parts = formData.get("required_parts") || "";
-  const message = formData.get("message") || "";
+    const firstName = formData.get("firstName") || "";
+    const lastName = formData.get("lastName") || "";
+    const company = formData.get("company") || "";
+    const phone = formData.get("phone") || "";
+    const email = formData.get("email") || "";
+    const vehicle = formData.get("vehicle") || "";
+    const parts = formData.get("parts") || "";
+    const message = formData.get("message") || "";
 
-  const subject = `New Quote Request - ${firstName} ${lastName}`;
-
-  const body = `
-NEW QUOTE REQUEST
-
-Name: ${firstName} ${lastName}
-Company: ${company}
-Phone: ${phone}
-Email: ${email}
-Vehicle Brand: ${vehicle}
-Required Part(s): ${parts}
-
-Message:
-${message}
-  `.trim();
-
-  // Temporary response while we connect Cloudflare Email Service
-  return new Response(body, {
-    status: 200,
-    headers: {
-      "Content-Type": "text/plain"
+    if (!firstName || !lastName || !phone || !email || !vehicle || !parts) {
+      return new Response(
+        JSON.stringify({ success: false, error: "Please fill in all required fields." }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
     }
-  });
+
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${context.env.RESEND_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        from: "Parts+Parcel Website <website@partsplusparcel.com>",
+        to: ["sales@partsplusparcel.com"],
+        reply_to: email,
+        subject: `New Quote Request — ${firstName} ${lastName}`,
+        html: `
+          <h2>New Quote Request</h2>
+
+          <p><strong>Name:</strong> ${firstName} ${lastName}</p>
+          <p><strong>Company:</strong> ${company || "Not provided"}</p>
+          <p><strong>Phone:</strong> ${phone}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Vehicle Brand:</strong> ${vehicle}</p>
+          <p><strong>Required Part(s):</strong> ${parts}</p>
+          <p><strong>Message:</strong></p>
+          <p>${message || "No additional message"}</p>
+        `
+      })
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error("Resend error:", error);
+
+      return new Response(
+        JSON.stringify({ success: false, error: "Unable to send email." }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    }
+
+    return new Response(
+      JSON.stringify({ success: true }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
+
+  } catch (error) {
+    console.error(error);
+
+    return new Response(
+      JSON.stringify({ success: false, error: "Something went wrong." }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
+  }
 }
