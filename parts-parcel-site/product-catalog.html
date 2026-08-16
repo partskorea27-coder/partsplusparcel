@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parts+Parcel — Product Catalogue &amp; SKU Detail</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#3A2F23; --white:#FFFFFF; --fog:#D3C8BE; --dusk:#B0A09D; --navy-deep:#495563;
+    --steel:#64644C; --steel-light:#8F8F78; --line:#E5DED4; --success:#16A34A;
+    --accent:#495563;
+    --accent-dark:#3A2F23;
+    --font-display:'Archivo Black', sans-serif; --font-body:'Inter', sans-serif; --font-mono:'JetBrains Mono', monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:var(--font-body);color:var(--ink);background:var(--white);line-height:1.55;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;} ul{list-style:none;} img{max-width:100%;display:block;}
+  h1,h2,h3{font-family:var(--font-display);font-weight:400;letter-spacing:-0.01em;text-transform:uppercase;color:var(--ink);}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 40px;}
+  .eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--steel);}
+  .mono{font-family:var(--font-mono);}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:13px;letter-spacing:0.03em;text-transform:uppercase;padding:12px 22px;border:1.5px solid var(--ink);cursor:pointer;transition:all .15s;}
+  .btn-solid{background:var(--accent);color:var(--white);border-color:var(--accent);}
+  .btn-solid:hover{background:var(--accent-dark);border-color:var(--accent-dark);}
+  .btn-outline{background:transparent;color:var(--ink);}
+  .btn-outline:hover{background:var(--ink);color:var(--white);}
+  :focus-visible{outline:2px solid var(--ink);outline-offset:2px;}
+
+  header.main-nav{position:sticky;top:0;z-index:50;background:var(--white);border-bottom:1px solid var(--line);}
+  .main-nav .wrap{display:flex;align-items:center;justify-content:space-between;height:82px;}
+  .logo{font-family:var(--font-display);font-size:19px;letter-spacing:-0.01em;color:var(--ink);display:flex;align-items:center;gap:8px;}
+  .logo .mark{width:30px;height:30px;border:2px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-body);font-weight:700;font-size:16px;}
+  nav.primary{display:flex;align-items:center;gap:38px;}
+  nav.primary a.nav-link{font-size:13.5px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--ink);position:relative;padding:4px 0;}
+  nav.primary a.nav-link.active{color:var(--steel-light);}
+  nav.primary a.nav-link::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--ink);transition:width .2s;}
+  nav.primary a.nav-link:hover::after{width:100%;}
+  @media (max-width:920px){nav.primary{display:none;}}
+
+  /* Demo toggle (prototype-only control, not part of live site) */
+  .demo-toggle{background:var(--fog);border-bottom:1px dashed var(--steel-light);padding:14px 0;}
+  .demo-toggle .wrap{display:flex;align-items:center;gap:14px;justify-content:center;flex-wrap:wrap;}
+  .demo-toggle span{font-size:12px;color:var(--steel);font-family:var(--font-mono);}
+  .toggle-btn{font-size:12px;font-weight:600;letter-spacing:0.03em;text-transform:uppercase;padding:9px 18px;border:1.5px solid var(--ink);background:var(--white);color:var(--ink);cursor:pointer;}
+  .toggle-btn.active{background:var(--ink);color:var(--white);}
+
+  .page-head{padding:56px 0 40px;}
+  .page-head h1{font-size:clamp(32px,5vw,52px);margin-top:10px;}
+  .page-head p{color:var(--steel);margin-top:14px;max-width:560px;font-size:15px;}
+
+  .catalogue-layout{display:grid;grid-template-columns:260px 1fr;gap:40px;padding-bottom:90px;}
+  .filters{border:1px solid var(--line);padding:26px;height:fit-content;position:sticky;top:100px;}
+  .filters h4{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steel);margin-bottom:16px;}
+  .filter-group{margin-bottom:28px;}
+  .filter-group:last-child{margin-bottom:0;}
+  .filter-opt{display:flex;align-items:center;justify-content:space-between;padding:8px 0;font-size:13.5px;color:var(--steel);cursor:pointer;}
+  .filter-opt:hover{color:var(--ink);}
+  .filter-opt.active{color:var(--navy-deep);font-weight:600;}
+  .filter-opt span.count{font-family:var(--font-mono);font-size:11px;color:var(--steel-light);}
+  .filter-opt input{margin-right:8px;}
+
+  .cat-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;}
+  .cat-toolbar .count{font-size:13px;color:var(--steel);}
+  .cat-toolbar select{border:1.5px solid var(--line);padding:9px 12px;font-size:13px;background:var(--white);font-family:var(--font-body);}
+
+  .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+  .p-card{background:var(--white);cursor:pointer;}
+  .p-img{aspect-ratio:4/3;background:linear-gradient(150deg,#EDECF1,#DFDEE5);position:relative;display:flex;align-items:center;justify-content:center;color:var(--steel-light);font-size:11px;font-family:var(--font-mono);}
+  .p-avail{position:absolute;top:10px;left:10px;background:var(--white);padding:3px 9px;font-size:10px;font-weight:600;display:flex;gap:5px;align-items:center;text-transform:uppercase;letter-spacing:0.03em;}
+  .p-avail .dot{width:6px;height:6px;border-radius:50%;background:var(--success);}
+  .p-body{padding:18px;}
+  .p-sku{font-family:var(--font-mono);font-size:10.5px;color:var(--steel);}
+  .p-body h3{font-size:14.5px;margin:6px 0 5px;text-transform:none;font-family:var(--font-body);font-weight:700;}
+  .p-compat{font-size:12px;color:var(--steel);margin-bottom:14px;}
+  .p-body .btn{width:100%;justify-content:center;font-size:11.5px;padding:10px;}
+
+  .sku-detail{padding-bottom:96px;}
+  .sku-layout{display:grid;grid-template-columns:1fr 1fr;gap:56px;}
+  .sku-gallery{position:sticky;top:100px;height:fit-content;}
+  .sku-main-img{background:linear-gradient(150deg,#EDECF1,#DFDEE5);height:400px;display:flex;align-items:center;justify-content:center;color:var(--steel-light);font-family:var(--font-mono);border:1px solid var(--line);margin-bottom:12px;}
+  .sku-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  .sku-thumbs div{background:#EDECF1;border:1px solid var(--line);height:64px;}
+
+  .sku-info h1{font-size:26px;margin:12px 0 16px;text-transform:none;font-family:var(--font-body);font-weight:700;}
+  .sku-avail{display:inline-flex;align-items:center;gap:7px;background:var(--fog);color:#0E7A34;font-size:12px;font-weight:600;padding:6px 12px;margin-bottom:22px;text-transform:uppercase;letter-spacing:0.02em;}
+  .sku-avail .dot{width:7px;height:7px;border-radius:50%;background:var(--success);}
+
+  .compat-table{width:100%;border-collapse:collapse;margin:16px 0 26px;font-size:13.5px;}
+  .compat-table th{text-align:left;background:var(--fog);padding:10px 12px;font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;color:var(--steel);letter-spacing:0.04em;}
+  .compat-table td{padding:10px 12px;border-bottom:1px solid var(--line);color:var(--ink);}
+
+  .sku-desc{color:var(--steel);font-size:14.5px;line-height:1.75;margin-bottom:26px;}
+  .benefit-list li{display:flex;gap:10px;font-size:14px;color:var(--ink);margin-bottom:11px;}
+  .benefit-list li .plus{font-family:var(--font-body);font-weight:700;color:var(--navy-deep);}
+
+  .sku-cta-box{border:1px solid var(--line);padding:24px;margin-top:28px;}
+  .qty-row{display:flex;gap:12px;margin-bottom:16px;}
+  .qty-row input{width:90px;border:1.5px solid var(--line);padding:9px 10px;font-family:var(--font-body);}
+  .sku-cta-box .btn{flex:1;justify-content:center;}
+  .sku-note{font-size:12px;color:var(--steel-light);margin-top:10px;}
+
+  .related-head{margin:64px 0 22px;}
+  .related-head h2{font-size:22px;}
+
+  footer{background:var(--ink);color:#B7BFC9;padding:70px 0 28px;margin-top:40px;}
+  .foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;margin-bottom:56px;}
+  .foot-grid h4{color:var(--white);font-size:12px;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:18px;}
+  .foot-grid ul li{margin-bottom:11px;font-size:13.5px;}
+  .foot-grid ul li a:hover{color:var(--white);}
+  .foot-brand .logo{color:var(--white);margin-bottom:16px;}
+  .foot-brand .logo .mark{border-color:rgba(255,255,255,0.5);color:var(--white);}
+  .foot-brand p{font-size:13.5px;color:#8A93A0;max-width:280px;line-height:1.6;}
+  .foot-bottom{border-top:1px solid rgba(255,255,255,0.12);padding-top:24px;display:flex;justify-content:space-between;font-size:12px;color:#6B7480;flex-wrap:wrap;gap:10px;}
+  @media (max-width:900px){.foot-grid{grid-template-columns:1fr 1fr;}}
+
+  .float-stack{position:fixed;right:24px;bottom:24px;z-index:60;display:flex;flex-direction:column;gap:12px;align-items:flex-end;}
+  .fab{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 22px rgba(0,0,0,0.25);cursor:pointer;transition:transform .15s;}
+  .fab:hover{transform:scale(1.06);}
+  .fab-whatsapp{background:#25D366;color:#fff;}
+  .fab-quote{background:var(--ink);color:#fff;}
+  @media (max-width:600px){.float-stack{right:14px;bottom:14px;} .fab{width:46px;height:46px;}}
+
+  @media (max-width:980px){
+    .catalogue-layout{grid-template-columns:1fr;}
+    .filters{position:static;}
+    .cat-grid{grid-template-columns:repeat(2,1fr);}
+    .sku-layout{grid-template-columns:1fr;}
+    .sku-gallery{position:static;}
+  }
+  @media (max-width:560px){.cat-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<header class="main-nav">
+  <div class="wrap">
+    <a href="index.html" class="logo"><span class="mark">+</span>PARTS+PARCEL</a>
+    <nav class="primary">
+      <a class="nav-link" href="index.html#home">Home</a>
+      <a class="nav-link" href="index.html#what-we-do">What We Do</a>
+      <a class="nav-link" href="index.html#brands">Brands</a>
+      <a class="nav-link" href="index.html#faq">FAQ</a>
+      <a class="nav-link" href="index.html#contact">Contact Us</a>
+    </nav>
+    <a class="btn btn-solid" href="index.html#contact">Request a Quote</a>
+  </div>
+</header>
+
+<div class="demo-toggle">
+  <div class="wrap">
+    <span>PROTOTYPE — TWO SAMPLE LAYOUTS IN ONE FILE:</span>
+    <button class="toggle-btn active" id="btn-cat" onclick="showView('cat')">Catalogue View</button>
+    <button class="toggle-btn" id="btn-sku" onclick="showView('sku')">SKU Detail View</button>
+  </div>
+</div>
+
+<!-- ========== CATALOGUE VIEW ========== -->
+<div id="view-cat">
+  <div class="wrap">
+    <div class="page-head">
+      <span class="eyebrow">PRODUCT CATALOGUE</span>
+      <h1>Brake Components</h1>
+      <p>Browse by vehicle brand or narrow further by part type. Every listing shows fitment and live availability before you enquire.</p>
+    </div>
+    <div class="catalogue-layout">
+      <aside class="filters">
+        <div class="filter-group">
+          <h4>Vehicle Brand</h4>
+          <label class="filter-opt active"><span><input type="checkbox" checked> Toyota</span><span class="count">412</span></label>
+          <label class="filter-opt"><span><input type="checkbox"> Honda</span><span class="count">356</span></label>
+          <label class="filter-opt"><span><input type="checkbox"> Nissan</span><span class="count">298</span></label>
+          <label class="filter-opt"><span><input type="checkbox"> Hyundai</span><span class="count">210</span></label>
+          <label class="filter-opt"><span><input type="checkbox"> Kia</span><span class="count">184</span></label>
+        </div>
+        <div class="filter-group">
+          <h4>Category</h4>
+          <label class="filter-opt"><span><input type="checkbox"> Engine Parts</span><span class="count">1,240</span></label>
+          <label class="filter-opt active"><span><input type="checkbox" checked> Brake Components</span><span class="count">890</span></label>
+          <label class="filter-opt"><span><input type="checkbox"> Suspension Parts</span><span class="count">760</span></label>
+          <label class="filter-opt"><span><input type="checkbox"> Filters</span><span class="count">540</span></label>
+          <label class="filter-opt"><span><input type="checkbox"> Electrical</span><span class="count">610</span></label>
+        </div>
+        <div class="filter-group">
+          <h4>Availability</h4>
+          <label class="filter-opt"><span><input type="checkbox"> In Stock</span><span class="count">2,890</span></label>
+          <label class="filter-opt"><span><input type="checkbox"> 3–5 Days</span><span class="count">1,110</span></label>
+        </div>
+      </aside>
+      <div>
+        <div class="cat-toolbar">
+          <span class="count">412 products in Toyota / Brake Components</span>
+          <select><option>Sort: Best selling</option><option>Sort: Name A–Z</option><option>Sort: Newest</option></select>
+        </div>
+        <div class="cat-grid">
+          <div class="p-card" onclick="showView('sku')">
+            <div class="p-img"><div class="p-avail"><span class="dot"></span>In Stock</div>IMAGE</div>
+            <div class="p-body"><div class="p-sku">SKU-BRK-4471</div><h3>Front Brake Pad Set</h3><div class="p-compat">Camry, Corolla · 2014–2022</div><a class="btn btn-outline">View Details</a></div>
+          </div>
+          <div class="p-card" onclick="showView('sku')">
+            <div class="p-img"><div class="p-avail"><span class="dot"></span>In Stock</div>IMAGE</div>
+            <div class="p-body"><div class="p-sku">SKU-BRK-4472</div><h3>Rear Brake Pad Set</h3><div class="p-compat">Camry, Corolla · 2014–2022</div><a class="btn btn-outline">View Details</a></div>
+          </div>
+          <div class="p-card" onclick="showView('sku')">
+            <div class="p-img"><div class="p-avail" style="color:#B45309;"><span class="dot" style="background:#F59E0B;"></span>3–5 Days</div>IMAGE</div>
+            <div class="p-body"><div class="p-sku">SKU-BRK-4488</div><h3>Brake Disc Rotor (Front, Pair)</h3><div class="p-compat">Camry · 2018–2022</div><a class="btn btn-outline">View Details</a></div>
+          </div>
+          <div class="p-card" onclick="showView('sku')">
+            <div class="p-img"><div class="p-avail"><span class="dot"></span>In Stock</div>IMAGE</div>
+            <div class="p-body"><div class="p-sku">SKU-BRK-4501</div><h3>Brake Caliper Assembly</h3><div class="p-compat">Corolla · 2016–2020</div><a class="btn btn-outline">View Details</a></div>
+          </div>
+          <div class="p-card" onclick="showView('sku')">
+            <div class="p-img"><div class="p-avail"><span class="dot"></span>In Stock</div>IMAGE</div>
+            <div class="p-body"><div class="p-sku">SKU-BRK-4519</div><h3>Brake Fluid DOT 4 (1L)</h3><div class="p-compat">Universal fitment</div><a class="btn btn-outline">View Details</a></div>
+          </div>
+          <div class="p-card" onclick="showView('sku')">
+            <div class="p-img"><div class="p-avail"><span class="dot"></span>In Stock</div>IMAGE</div>
+            <div class="p-body"><div class="p-sku">SKU-BRK-4527</div><h3>ABS Wheel Speed Sensor</h3><div class="p-compat">Camry · 2015–2021</div><a class="btn btn-outline">View Details</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SKU DETAIL VIEW ========== -->
+<div id="view-sku" style="display:none;">
+  <div class="wrap sku-detail">
+    <div class="page-head" style="padding-bottom:0;">
+      <span class="eyebrow">BRAKE COMPONENTS / TOYOTA</span>
+    </div>
+    <div class="sku-layout" style="margin-top:24px;">
+      <div class="sku-gallery">
+        <div class="sku-main-img">PRODUCT IMAGE</div>
+        <div class="sku-thumbs"><div></div><div></div><div></div><div></div></div>
+      </div>
+      <div class="sku-info">
+        <div class="p-sku mono">SKU-BRK-4471</div>
+        <h1>Front Brake Pad Set — Ceramic</h1>
+        <div class="sku-avail"><span class="dot"></span>In Stock</div>
+
+        <table class="compat-table">
+          <tr><th>Vehicle</th><th>Model</th><th>Years</th></tr>
+          <tr><td>Toyota</td><td>Camry (XV70)</td><td>2018–2022</td></tr>
+          <tr><td>Toyota</td><td>Corolla (E210)</td><td>2019–2022</td></tr>
+          <tr><td>Toyota</td><td>Corolla Altis</td><td>2014–2018</td></tr>
+        </table>
+
+        <p class="sku-desc">Ceramic compound front brake pad set matched to OEM friction specifications, with chamfered edges and shims for reduced noise. Cross-checked against manufacturer part numbers before listing to minimise fitment returns.</p>
+
+        <ul class="benefit-list">
+          <li><span class="plus">+</span>OEM-equivalent stopping performance and pedal feel</li>
+          <li><span class="plus">+</span>Low-dust ceramic compound, reduced wheel staining</li>
+          <li><span class="plus">+</span>Includes shims and hardware kit — no separate purchase needed</li>
+          <li><span class="plus">+</span>12-month trade warranty against manufacturing defects</li>
+        </ul>
+
+        <div class="sku-cta-box">
+          <div class="qty-row">
+            <input type="number" value="1" min="1">
+            <a class="btn btn-outline" style="flex:1;justify-content:center;">Add to Enquiry List</a>
+          </div>
+          <a class="btn btn-solid" href="index.html#contact" style="width:100%;justify-content:center;">Request Quotation for This Part</a>
+          <p class="sku-note">Quotations are priced per your account tier.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="related-head"><h2>Related Parts for Camry / Corolla</h2></div>
+    <div class="cat-grid">
+      <div class="p-card"><div class="p-img"><div class="p-avail"><span class="dot"></span>In Stock</div>IMAGE</div><div class="p-body"><div class="p-sku">SKU-BRK-4472</div><h3>Rear Brake Pad Set</h3><div class="p-compat">Camry, Corolla · 2014–2022</div><a class="btn btn-outline">View Details</a></div></div>
+      <div class="p-card"><div class="p-img"><div class="p-avail" style="color:#B45309;"><span class="dot" style="background:#F59E0B;"></span>3–5 Days</div>IMAGE</div><div class="p-body"><div class="p-sku">SKU-BRK-4488</div><h3>Brake Disc Rotor (Front, Pair)</h3><div class="p-compat">Camry · 2018–2022</div><a class="btn btn-outline">View Details</a></div></div>
+      <div class="p-card"><div class="p-img"><div class="p-avail"><span class="dot"></span>In Stock</div>IMAGE</div><div class="p-body"><div class="p-sku">SKU-BRK-4519</div><h3>Brake Fluid DOT 4 (1L)</h3><div class="p-compat">Universal fitment</div><a class="btn btn-outline">View Details</a></div></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="logo"><span class="mark">+</span>PARTS+PARCEL</a>
+        <p>Genuine and aftermarket auto parts distribution for workshops, retailers, fleets and dealers.</p>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#what-we-do">What We Do</a></li>
+          <li><a href="index.html#brands">Brands</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
+          <li><a href="index.html#contact">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>More</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="product-catalog.html">Product Catalogue</a></li>
+          <li><a href="index.html#contact">Request a Quote</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>sales@partsplusparcel.com</li>
+          <li>Delivery &amp; self-collection arranged upon order</li>
+          <li>9am–6pm</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Parts+Parcel Pte Ltd. All rights reserved.</span>
+      <span>Working prototype — see the strategy document for remaining details to confirm before launch.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="float-stack">
+  <div class="fab-wrap"><a class="fab fab-quote" href="index.html#contact" aria-label="Request a Quote">+</a></div>
+</div>
+
+<script>
+function showView(v){
+  document.getElementById('view-cat').style.display = v==='cat' ? 'block':'none';
+  document.getElementById('view-sku').style.display = v==='sku' ? 'block':'none';
+  document.getElementById('btn-cat').classList.toggle('active', v==='cat');
+  document.getElementById('btn-sku').classList.toggle('active', v==='sku');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

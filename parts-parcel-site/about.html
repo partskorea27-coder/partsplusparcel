@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Parts+Parcel — Automotive Parts Distributor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#3A2F23; --white:#FFFFFF; --fog:#D3C8BE; --dusk:#B0A09D; --navy-deep:#495563;
+    --steel:#64644C; --steel-light:#8F8F78; --line:#E5DED4; --success:#16A34A;
+    --accent:#495563;
+    --accent-dark:#3A2F23;
+    --font-display:'Archivo Black', sans-serif; --font-body:'Inter', sans-serif; --font-mono:'JetBrains Mono', monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:var(--font-body);color:var(--ink);background:var(--white);line-height:1.55;-webkit-font-smoothing:antialiased;}
+  img{max-width:100%;display:block;} a{color:inherit;text-decoration:none;} ul{list-style:none;}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 40px;}
+  h1,h2,h3{font-family:var(--font-display);font-weight:400;letter-spacing:-0.01em;text-transform:uppercase;color:var(--ink);}
+  :focus-visible{outline:2px solid var(--ink);outline-offset:3px;}
+  @media (prefers-reduced-motion: reduce){*{animation-duration:0.01ms !important;transition-duration:0.01ms !important;}}
+
+  header.main-nav{position:sticky;top:0;z-index:50;background:var(--white);border-bottom:1px solid var(--line);}
+  .main-nav .wrap{display:flex;align-items:center;justify-content:space-between;height:82px;}
+  .logo{font-family:var(--font-display);font-size:19px;letter-spacing:-0.01em;color:var(--ink);display:flex;align-items:center;gap:8px;}
+  .logo .mark{width:30px;height:30px;border:2px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-body);font-weight:700;font-size:16px;}
+  nav.primary{display:flex;align-items:center;gap:38px;}
+  nav.primary a.nav-link{font-size:13.5px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--ink);position:relative;padding:4px 0;}
+  nav.primary a.nav-link.active{color:var(--steel-light);}
+  nav.primary a.nav-link::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--ink);transition:width .2s;}
+  nav.primary a.nav-link:hover::after{width:100%;}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:13.5px;letter-spacing:0.03em;text-transform:uppercase;padding:14px 26px;border:1.5px solid var(--ink);cursor:pointer;transition:all .15s;white-space:nowrap;}
+  .btn-solid{background:var(--accent);color:var(--white);border-color:var(--accent);}
+  .btn-solid:hover{background:var(--accent-dark);border-color:var(--accent-dark);}
+  .btn-outline{background:transparent;color:var(--ink);}
+  .btn-outline:hover{background:var(--ink);color:var(--white);}
+  .btn-outline-white{background:transparent;color:var(--white);border-color:rgba(255,255,255,0.6);}
+  .btn-outline-white:hover{background:var(--white);color:var(--ink);}
+  @media (max-width:920px){nav.primary{display:none;}}
+
+  .page-hero{position:relative;min-height:56vh;display:flex;align-items:flex-end;overflow:hidden;
+    background:linear-gradient(180deg, #1a2430 0%, #0d1219 60%, #090c10 100%);}
+  .page-hero-texture{position:absolute;inset:0;opacity:0.5;
+    background-image:radial-gradient(circle at 18% 30%, rgba(159,180,214,0.15), transparent 40%),
+                      linear-gradient(115deg, transparent 48%, rgba(255,255,255,0.03) 49%, transparent 50%);}
+  .page-hero-note{position:absolute;top:26px;right:40px;font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.06em;color:rgba(255,255,255,0.4);text-align:right;max-width:220px;}
+  .page-hero-plus{position:absolute;font-family:var(--font-body);font-weight:700;color:rgba(255,255,255,0.06);font-size:280px;line-height:1;right:-30px;top:2%;user-select:none;pointer-events:none;}
+  .page-hero .wrap{position:relative;padding-bottom:64px;}
+  .crumb{font-family:var(--font-mono);font-size:11.5px;color:rgba(255,255,255,0.5);margin-bottom:16px;}
+  .crumb b{color:var(--white);}
+  .page-hero h1{color:var(--white);font-size:clamp(40px,6vw,72px);line-height:0.95;margin-bottom:16px;}
+  .page-hero p{font-family:var(--font-body);font-style:italic;color:rgba(255,255,255,0.85);font-size:17px;max-width:560px;}
+
+  section{padding:96px 0;}
+  .section-fog{background:var(--fog);}
+  .eyebrow{font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--steel);}
+  .two-col{display:grid;grid-template-columns:1.15fr 1fr;gap:60px;align-items:start;}
+  .section-head{margin-bottom:36px;}
+  .section-head h2{font-size:clamp(28px,3.6vw,40px);margin-top:10px;}
+  .prose p{color:var(--steel);font-size:15px;line-height:1.8;margin-bottom:18px;}
+
+  .stat-strip{background:var(--ink);padding:40px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;text-align:center;}
+  .stat-strip div strong{display:block;font-family:var(--font-display);font-size:30px;color:var(--white);}
+  .stat-strip div span{font-family:var(--font-mono);font-size:11px;letter-spacing:0.04em;color:#9199A6;text-transform:uppercase;}
+  @media (max-width:700px){.stat-strip{grid-template-columns:1fr;}}
+
+  .value-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+  .value-card{background:var(--white);padding:34px 28px;}
+  .value-card .num{font-family:var(--font-display);color:var(--steel-light);font-size:13px;}
+  .value-card h3{font-size:17px;margin:16px 0 10px;text-transform:none;font-family:var(--font-body);font-weight:700;}
+  .value-card p{font-size:13.5px;color:var(--steel);margin:0;}
+  @media (max-width:760px){.value-grid{grid-template-columns:1fr;}}
+
+  .capability-list{display:grid;grid-template-columns:1fr 1fr;gap:0 40px;}
+  .capability-item{display:flex;gap:14px;align-items:flex-start;padding:18px 0;border-bottom:1px solid var(--line);}
+  .capability-item .plus{font-family:var(--font-body);font-weight:700;color:var(--navy-deep);flex-shrink:0;}
+  .capability-item span{font-size:14.5px;color:var(--ink);font-weight:500;}
+  @media (max-width:760px){.capability-list{grid-template-columns:1fr;}}
+
+  .cta-banner{background:var(--dusk);color:var(--navy-deep);text-align:center;padding:80px 0;}
+  .cta-banner h2{color:var(--navy-deep);font-size:clamp(28px,4vw,42px);margin-bottom:14px;}
+  .cta-banner p{color:rgba(73,85,99,0.8);margin-bottom:30px;max-width:480px;margin-left:auto;margin-right:auto;font-size:15px;}
+  .cta-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+  .btn-outline-navy{background:transparent;color:var(--navy-deep);border-color:var(--navy-deep);}
+  .btn-outline-navy:hover{background:var(--navy-deep);color:var(--white);}
+  .btn-solid-navy{background:var(--navy-deep);color:var(--white);border-color:var(--navy-deep);}
+  .btn-solid-navy:hover{background:var(--ink);border-color:var(--ink);}
+
+  footer{background:var(--ink);color:#B7BFC9;padding:70px 0 28px;}
+  .foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;margin-bottom:56px;}
+  .foot-grid h4{color:var(--white);font-size:12px;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:18px;}
+  .foot-grid ul li{margin-bottom:11px;font-size:13.5px;}
+  .foot-grid ul li a:hover{color:var(--white);}
+  .foot-brand .logo{color:var(--white);margin-bottom:16px;}
+  .foot-brand .logo .mark{border-color:rgba(255,255,255,0.5);color:var(--white);}
+  .foot-brand p{font-size:13.5px;color:#8A93A0;max-width:280px;line-height:1.6;}
+  .foot-bottom{border-top:1px solid rgba(255,255,255,0.12);padding-top:24px;display:flex;justify-content:space-between;font-size:12px;color:#6B7480;flex-wrap:wrap;gap:10px;}
+  @media (max-width:900px){.foot-grid{grid-template-columns:1fr 1fr;}}
+
+  .float-stack{position:fixed;right:24px;bottom:24px;z-index:60;display:flex;flex-direction:column;gap:12px;align-items:flex-end;}
+  .fab{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 22px rgba(0,0,0,0.25);cursor:pointer;transition:transform .15s;}
+  .fab:hover{transform:scale(1.06);}
+  .fab-whatsapp{background:#25D366;color:#fff;}
+  .fab-quote{background:var(--ink);color:#fff;}
+  @media (max-width:600px){.float-stack{right:14px;bottom:14px;} .fab{width:46px;height:46px;}}
+  @media (max-width:900px){.two-col{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<header class="main-nav">
+  <div class="wrap">
+    <a href="index.html" class="logo"><span class="mark">+</span>PARTS+PARCEL</a>
+    <nav class="primary">
+      <a class="nav-link" href="index.html#home">Home</a>
+      <a class="nav-link" href="index.html#what-we-do">What We Do</a>
+      <a class="nav-link" href="index.html#brands">Brands</a>
+      <a class="nav-link" href="index.html#faq">FAQ</a>
+      <a class="nav-link" href="index.html#contact">Contact Us</a>
+    </nav>
+    <a class="btn btn-solid" href="index.html#contact">Request a Quote</a>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="page-hero-texture"></div>
+  <div class="page-hero-plus">+</div>
+  <div class="page-hero-note">[ PHOTOGRAPH — warehouse shelving or team at work, replace this panel with your own photography ]</div>
+  <div class="wrap">
+    <div class="crumb">Home / <b>About Us</b></div>
+    <h1>Parts sourcing,<br>without the guesswork.</h1>
+    <p>Ten years of getting fitment right for workshops, retailers, fleets and dealers.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap two-col">
+    <div class="prose">
+      <div class="section-head">
+        <span class="eyebrow">COMPANY OVERVIEW</span>
+        <h2>10 years in the business</h2>
+      </div>
+      <p>Established in 2016, Parts+Parcel has spent 10 years supplying genuine and aftermarket spare parts to workshops, retailers, fleet operators, and dealerships. What started as a single-brand parts counter has grown into a multi-brand distribution operation covering Toyota, Honda, Nissan, Mazda, Hyundai, Kia, Mitsubishi and BYD.</p>
+      <p>The reason customers stay is unchanged: every part that ships has been checked against the vehicle it's meant to fit. We'd rather tell you a part is a few days out than quote "in stock" and let a workshop find out otherwise on the day of the repair.</p>
+      <p>As BYD and other newer brands become a bigger part of the vehicle mix on the road, we're expanding our sourcing coverage to keep pace — so the brands you need today are matched by the brands your customers will be driving tomorrow.</p>
+    </div>
+    <div class="stat-strip">
+      <div><strong>10+</strong><span>Years in business</span></div>
+      <div><strong>8</strong><span>Brands supported</span></div>
+      <div><strong>Genuine +</strong><span>Verified aftermarket</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-fog">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">MISSION &amp; VALUES</span>
+      <h2>What we optimize for, in order</h2>
+    </div>
+    <div class="value-grid">
+      <div class="value-card"><div class="num">01</div><h3>Accuracy First</h3><p>Fitment is verified before a quotation goes out, not after a return comes back.</p></div>
+      <div class="value-card"><div class="num">02</div><h3>Straight Answers</h3><p>If a part is a few days out, we say so — we don't quote "in stock" to win the order.</p></div>
+      <div class="value-card"><div class="num">03</div><h3>Built for Repeat Business</h3><p>Trade accounts, not one-off transactions, are how we measure success.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">SERVICE CAPABILITIES</span>
+      <h2>What a Parts+Parcel account gets you</h2>
+    </div>
+    <div class="capability-list">
+      <div class="capability-item"><span class="plus">+</span><span>Trade and wholesale account pricing</span></div>
+      <div class="capability-item"><span class="plus">+</span><span>Bulk and scheduled fleet orders</span></div>
+      <div class="capability-item"><span class="plus">+</span><span>Fast quotation turnaround on standard requests</span></div>
+      <div class="capability-item"><span class="plus">+</span><span>Export and wholesale buyer support</span></div>
+      <div class="capability-item"><span class="plus">+</span><span>Dedicated account contact for repeat business</span></div>
+      <div class="capability-item"><span class="plus">+</span><span>Sourcing across 8 major vehicle brands</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-banner">
+  <div class="wrap">
+    <span class="eyebrow" style="color:rgba(73,85,99,0.6);">GET STARTED</span>
+    <h2 style="margin-top:12px;">Tell us what your workshop needs</h2>
+    <p>Call, WhatsApp, or send an enquiry — we'll get back to you with pricing and availability.</p>
+    <div class="cta-actions">
+      <a class="btn btn-solid-navy" href="index.html#contact">Request a Quote</a>
+      <a class="btn btn-outline-navy" href="product-catalog.html">Browse Products</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="logo"><span class="mark">+</span>PARTS+PARCEL</a>
+        <p>Genuine and aftermarket auto parts distribution for workshops, retailers, fleets and dealers.</p>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#what-we-do">What We Do</a></li>
+          <li><a href="index.html#brands">Brands</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
+          <li><a href="index.html#contact">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>More</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="product-catalog.html">Product Catalogue</a></li>
+          <li><a href="index.html#contact">Request a Quote</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>sales@partsplusparcel.com</li>
+          <li>Delivery &amp; self-collection arranged upon order</li>
+          <li>9am–6pm</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Parts+Parcel Pte Ltd. All rights reserved.</span>
+      <span>Working prototype — see the strategy document for remaining details to confirm before launch.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="float-stack">
+  <div class="fab-wrap"><a class="fab fab-quote" href="index.html#contact" aria-label="Request a Quote">+</a></div>
+</div>
+
+</body>
+</html>
